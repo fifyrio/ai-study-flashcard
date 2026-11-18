@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>代码填空练习 · 人工智能训练师操作技能</title>
+  <meta name="description" content="Python 代码填空练习：在代码里直接填空判分，可在浏览器里运行，右侧对照评分表和素材文件。">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip" href="#cells">跳到代码</a>
+  <div class="app">
+
+    <aside class="rail" aria-label="题目导航">
+      <div class="brand">
+        <p class="kicker">CODE QUIZ STUDIO</p>
+        <h1>代码填空练习</h1>
+        <p class="tagline">填空判分 + 浏览器内 Python 运行环境。</p>
+      </div>
+
+      <section aria-labelledby="h-list">
+        <h2 id="h-list">题目列表</h2>
+        <div id="groups"></div>
+      </section>
+
+      <details class="more" id="rail-more" open>
+        <summary>刷题顺序 · 统计 · 导航</summary>
+        <section aria-labelledby="h-order">
+          <h2 id="h-order">刷题顺序</h2>
+          <div class="seg" role="group" aria-labelledby="h-order">
+            <button type="button" id="mode-seq" aria-pressed="true">按顺序</button>
+            <button type="button" id="mode-random" aria-pressed="false">随机乱序</button>
+          </div>
+        </section>
+
+        <section aria-labelledby="h-stats">
+          <h2 id="h-stats">统计</h2>
+          <dl class="stats">
+            <div><dt>总题数</dt><dd id="st-total">0</dd></div>
+            <div><dt>已完成</dt><dd id="st-done">0</dd></div>
+            <div><dt>总填空数</dt><dd id="st-blanks">0</dd></div>
+            <div><dt>填对数</dt><dd id="st-ok">0</dd></div>
+          </dl>
+        </section>
+
+        <section aria-labelledby="h-nav">
+          <h2 id="h-nav">导航 &amp; 数据</h2>
+          <div class="nav-btns">
+            <button type="button" id="prev" class="soft">上一题</button>
+            <button type="button" id="next" class="soft">下一题</button>
+            <button type="button" id="clear-all" class="soft danger">清除本机进度</button>
+          </div>
+        </section>
+      </details>
+    </aside>
+
+    <main class="workspace">
+      <header class="q-head">
+        <p class="kicker" id="kicker"></p>
+        <h2 id="q-title" class="q-title"></h2>
+        <p id="q-meta" class="q-meta"></p>
+      </header>
+
+      <div id="brief"></div>
+      <div id="cells" class="cells"></div>
+
+      <div class="toolbar" role="group" aria-label="操作">
+        <button type="button" id="check" class="primary">检查答案</button>
+        <button type="button" id="show" class="soft">显示答案</button>
+        <button type="button" id="reset" class="soft">重置本题</button>
+        <span class="spacer"></span>
+        <button type="button" id="run-mine" class="soft">▶ 运行我的代码</button>
+        <button type="button" id="run-ref" class="soft">▶ 运行参考答案</button>
+      </div>
+      <p id="result" class="result" role="status" aria-live="polite"></p>
+      <p id="run-status" class="run-status" role="status" aria-live="polite"></p>
+      <p id="run-note" class="fine">运行需要联网：第一次会从 CDN 下载 Python 运行环境和 pandas、scikit-learn 等包（几十 MB，约半分钟到一分钟），之后同一页面里不再重复下载。图表里的中文可能显示成方框，这是浏览器里缺中文字体，不影响判断。</p>
+    </main>
+
+    <aside class="side" id="side" aria-label="评分表与素材"></aside>
+  </div>
+
+  <script src="data/questions.js"></script>
+  <script src="data/files.js"></script>
+  <script src="js/judge.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/runner.js"></script>
+  <script src="js/view.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

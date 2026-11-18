@@ -1,0 +1,5 @@
+<annotation>
+  <filename>img_002.jpg</filename>
+  <object><name>bus</name><bndbox><xmin>10</xmin><ymin>20</ymin><xmax>110</xmax><ymax>120</ymax></bndbox></object>
+  <object><name>car</name><bndbox><xmin>11</xmin><ymin>21</ymin><xmax>111</xmax><ymax>121</ymax></bndbox></object>
+</annotation>

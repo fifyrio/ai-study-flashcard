@@ -1,0 +1,89 @@
+@id L3-2.2.1
+@level L3
+@title 智能信用评分Logistic回归模型开发与测试
+@no 2.2.1
+@source 三级模拟卷 2.2.1。代码取自仓库 practices/2.2.1 的参考解答；评分点 M5–M12 取自你发来的截图，M1–M4 的合计分为推算。
+@total 20
+@time 20
+@py pandas, scikit-learn, matplotlib | imbalanced-learn
+@files
+finance数据集.csv = ext:2.2.1_智能信用评分Logistic回归模型开发与测试/data/finance数据集.csv
+@desc
+信用评分是对贷款申请人做风险评估的统计模型。请根据 finance 数据集补全 2.2.1.ipynb：选择合适的特征开发评分模型，用测试工具测试模型，分析测试结果并完成测试报告，再运用工具纠正错误原因。
+数据集说明：Unnamed: 0 是索引号；SeriousDlqin2yrs 表示个人过去两年内是否出现过严重拖欠（1 表示是），它是预测目标。
+@tasks
+（1）正确加载数据集，显示前五行。
+（2）使用 Logistic 模型训练：设定自变量和因变量，训练后把模型保存为 2.2.1_model.pkl，预测结果保存为 2.2.1_results.txt。
+（3）测试模型并记录结果，保存为 2.2.1_report.txt。
+（4）分析测试结果，在 2.2.1.docx 中写测试报告：模型性能评估、错误分析、改进建议。
+（5）处理数据不平衡问题，重新训练，结果保存为 2.2.1_results_xg.txt。
+@rubric
+R1|7|M1–M4：加载并显示数据、设定自变量因变量并分割数据、训练 Logistic 模型（细则原文不在资料中，由合计 20 分推算）|derived
+M5|1|正确保存 Logistic 回归模型文件|official
+M6|1|使用 Logistic 回归模型在测试集上进行预测|official
+M7|2|正确计算 Logistic 回归模型的准确率|official
+M8|2|正确处理数据不平衡问题|official
+M9|2|模型重新训练|official
+M10|1|正确生成新预测结果|official
+M11|1|正确分析新的测试结果|official
+M12|3|正确填写 2.2.1.docx 测试报告：模型性能评估 1 分、错误分析 1 分、改进建议 1 分|official
+@cell
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+import pickle
+from sklearn.metrics import classification_report
+from imblearn.over_sampling import SMOTE
+
+# 加载数据
+data = ⟦pd.read_csv('finance数据集.csv')⟧
+
+# 显示前五行的数据
+print(⟦data.head()⟧)
+@cell
+# 选择自变量和因变量
+X = ⟦data.drop(['SeriousDlqin2yrs', 'Unnamed: 0'], axis=1)⟧
+y = ⟦data['SeriousDlqin2yrs']⟧
+
+# 分割训练集和测试集（测试集 20%）
+X_train, X_test, y_train, y_test = ⟦train_test_split⟧(⟦X, y, test_size=0.2⟧, random_state=42)
+@cell
+# 训练 Logistic 回归模型（最大迭代次数 1000）
+model = ⟦LogisticRegression(max_iter=1000)⟧
+⟦model.fit(X_train, y_train)⟧
+@cell
+# 保存模型
+with open('2.2.1_model.pkl', 'wb') as file:
+    pickle.⟦dump(model, file)⟧
+
+# 预测并保存结果
+y_pred = ⟦model.predict(X_test)⟧
+pd.DataFrame(y_pred, columns=['预测结果']).to_csv('2.2.1_results.txt', index=False)
+
+# 生成测试报告
+report = ⟦classification_report(y_test, y_pred, zero_division=1)⟧
+with open('2.2.1_report.txt', 'w') as file:
+    file.write(report)
+print(report)
+@cell
+# 分析测试结果：准确率
+accuracy = ⟦(y_test == y_pred).mean()⟧
+print(f"模型准确率: {accuracy:.2f}")
+@cell
+# 处理数据不平衡：对训练集做 SMOTE 过采样
+smote = ⟦SMOTE(random_state=42)⟧
+X_resampled, y_resampled = ⟦smote.fit_resample(X_train, y_train)⟧
+
+# 重新训练模型并重新预测
+⟦model.fit(X_resampled, y_resampled)⟧
+y_pred_resampled = ⟦model.predict(X_test)⟧
+
+# 保存新结果和新的测试报告
+pd.DataFrame(y_pred_resampled, columns=['预测结果']).to_csv('2.2.1_results_xg.txt', index=False)
+report_resampled = classification_report(y_test, y_pred_resampled, zero_division=1)
+with open('2.2.1_report_xg.txt', 'w') as file:
+    file.write(report_resampled)
+
+# 分析新的测试结果
+accuracy_resampled = (y_test == y_pred_resampled).mean()
+print(f"重新采样后的模型准确率: {accuracy_resampled:.2f}")

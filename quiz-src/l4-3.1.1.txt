@@ -1,0 +1,54 @@
+@id L4-3.1.1
+@level L4
+@title 超市智能销售系统运维（pandas 统计分析）
+@no 3.1.1
+@source 四级操作技能复习题 3.1.1 的 Python 部分。评分点取自四级题库的评分表；参考代码由我按题干编写，未经官方核对；数据是我按题干列名生成的示例数据。
+@total 20
+@time 30
+@py pandas, matplotlib
+@files
+A超市的销售数据.csv = src:l4-3.1.1/A超市的销售数据.csv
+@desc
+为支持 A 超市的备货决策，找出销售爆款品种。考试里这题先用 Excel 加载「A超市的销售数据.csv」、对「不锈钢碗」的缺失值做填充（4 分，不在代码里），再补全 3.1.1.ipynb 做统计分析，最后写备货建议。
+@tasks
+（1）加载数据集并打印，统计数据集中大类名称的个数。
+（2）计算不同大类名称下的总销售金额，并按总销售金额从大到小排序。
+（3）选出销售金额最大的大类，分析该大类下销售总金额最大的前 15 个小类，用柱状图输出。
+（4）找出当前最热大类下的前五个小类，写出备货建议（品类、资金、备货时间、备货量任选一方面）。
+@rubric
+M1|4|正确填充 1 条缺失数据（Excel 操作，不在代码里）|official
+M2|2|正确加载数据集并输出|official
+M3|1|正确统计出大类个数|official
+M4|2|正确统计出按大类分布的销售金额情况|official
+M5|1|以上数据从大到小降序排序|official
+M6|2|筛选出销售金额最大的大类名称|official
+M7|2|计算该大类下各小类的销售总金额|official
+M8|1|筛选出各小类销售总金额前 15|official
+M9|1|绘制柱状图|official
+M10|2|分析出当前销售金额最大的前五个小类|official
+M11|2|根据分析结果给出合理的备货建议|official
+@cell
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# 1. 加载数据集并打印，统计大类名称的个数
+data = ⟦pd.read_csv('A超市的销售数据.csv')⟧
+print(⟦data.head()⟧)
+print("大类名称个数:", ⟦data['大类名称'].nunique()⟧)
+@cell
+# 2. 计算不同大类名称下的总销售金额，并按从大到小排序
+category_sales = ⟦data.groupby('大类名称')['销售金额'].sum().sort_values(ascending=False)⟧
+print(category_sales)
+@cell
+# 3. 选出销售金额最大的大类，分析其下销售总金额最大的前 15 个小类
+top_category = ⟦category_sales.idxmax()||category_sales.index[0]⟧
+sub_data = data[⟦data['大类名称'] == top_category⟧]
+sub_sales = ⟦sub_data.groupby('小类名称')['销售金额'].sum().sort_values(ascending=False).head(15)⟧
+
+# 柱状图输出
+sub_sales.⟦plot(kind='bar', figsize=(10, 5))||plot.bar(figsize=(10, 5))⟧
+plt.title('top 15 sub categories')
+plt.show()
+@cell
+# 4. 当前最热大类下的前五个小类，用于下个季度备货
+print(⟦sub_sales.head(5)⟧)

@@ -1,0 +1,60 @@
+@id L3-3.1.1
+@level L3
+@title 智能音箱产品的数据分析与优化
+@no 3.1.1
+@source 三级模拟卷 3.1.1。代码取自仓库 practices/3.1.1；官方评分表原文不在资料中，右侧列的是参考答案要点。
+@total 15
+@time 20
+@py pandas, matplotlib | seaborn
+@files
+smart_speaker_data.csv = ext:3.1.1_智能音箱产品的数据分析与优化/data/smart_speaker_data.csv
+@desc
+智能音箱厂商要持续优化产品。请根据智能音箱数据集，从用户使用习惯、功能使用频率、响应时间三方面做分析，并给出 3 个优化方向和对应的解决方案。本页的代码部分用来完成数据分析；报告和优化方案要另外写成 docx。
+@tasks
+（1）分析哪些功能最常被使用（用户使用习惯）。
+（2）识别最受欢迎和较少使用的功能（功能使用频率）。
+（3）考察不同功能的平均响应时间，找出可能的瓶颈（响应时间）。
+（4）给出 3 个优化方向及对应解决方案，保存为 3.1.1-2.docx。
+@rubric
+R1|-|用户使用习惯：最常被使用的功能是调整音量、查询新闻、查天气|official
+R2|-|功能使用频率：最受欢迎的功能是调整音量；较少使用的是播放音乐、控制家居|official
+R3|-|响应时间：较长的是控制家居；较短的是查询新闻；其余为适中|official
+R4|-|优化方向一：强化网络连接稳定性、采用更高效的通信协议，减少控制家居的响应时间|official
+R5|-|优化方向二：优化查询知识的检索算法，加快数据处理速度|official
+R6|-|优化方向三：增加本地缓存和预加载机制，减少播放音乐、查天气对外部资源的依赖|official
+@cell
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# 加载数据
+data = ⟦pd.read_csv('smart_speaker_data.csv')⟧
+print(data)
+@cell
+# 用户使用习惯分析：哪些功能最常被使用
+plt.figure(figsize=(10, 6))
+⟦sns.barplot(x='使用次数', y='功能', data=data)⟧
+plt.title('各功能使用次数')
+plt.show()
+@cell
+# 功能使用频率分析
+most_used = ⟦data.loc[data['使用次数'].idxmax()]['功能']⟧
+least_used = ⟦data.loc[data['使用次数'].idxmin()]['功能']⟧
+
+print(f"最受欢迎的功能: {most_used}")
+print(f"较少使用的功能: {least_used}")
+@cell
+# 响应时间分析
+plt.figure(figsize=(10, 6))
+sns.barplot(x='平均响应时间(秒)', y='功能', data=data)
+plt.title('各功能平均响应时间')
+plt.show()
+@cell
+# 响应时间分类：长于 3 秒 / 1.5 到 3 秒 / 短于 1.5 秒
+long_response = ⟦data[data['平均响应时间(秒)'] > 3]['功能'].tolist()⟧
+medium_response = ⟦data[(data['平均响应时间(秒)'] >= 1.5) & (data['平均响应时间(秒)'] <= 3)]['功能'].tolist()⟧
+short_response = ⟦data[data['平均响应时间(秒)'] < 1.5]['功能'].tolist()⟧
+
+print(f"响应时间较长的功能: {', '.join(long_response)}")
+print(f"响应时间适中的功能: {', '.join(medium_response)}")
+print(f"响应时间较短的功能: {', '.join(short_response)}")

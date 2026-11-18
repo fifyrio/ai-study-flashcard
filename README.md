@@ -37,19 +37,41 @@ python3 scripts/build_decks.py --todo media --chapter basic --type mc   # 列出
 
 我的答案写在 `answers/` 下，一行一题：`<题号> <答案> [| 备注]`，判断题用 `T`/`F`，选择题用 `A`–`D`，备注以 `?` 开头表示把握低。官方答案优先于我的答案。
 
+## 代码填空练习（操作技能）
+
+双击 `code-quiz/index.html`。在代码里直接填空、实时判分，右侧对照评分表、素材文件和数据列，
+还能在浏览器里用 Python（Pyodide）运行你的代码或参考答案。
+
+- **三级 5 题**：来自 GitHub 仓库 `Morriaty-The-Murderer/2025-AI-Trainer-practices`（3 级模拟卷，共 6 题，
+  其中 4.2.1 是纯文字方案题，没有代码，没做成填空）。仓库下载在 `external/`（已加入 `.gitignore`）。
+- **四级 4 题**：按四级实操题的题干改写（2.1.1、2.1.3、3.1.1、3.2.5）。评分点取自四级题库的评分表，
+  参考代码由我编写、**未经官方核对**，数据是我生成的示例数据。
+- 运行功能需要联网（首次从 CDN 下载 Python 环境和 pandas、scikit-learn 等）。3.2.1（需要 onnxruntime 和模型文件）
+  和四级 2.1.1（需要图片文件）只做填空判分，不能运行。
+- 题目写在 `quiz-src/*.txt`，用 `⟦答案||备选答案⟧` 标出填空。改完后运行：
+
+```bash
+python3 scripts/make_sample_data.py   # 只在需要重新生成四级示例数据时运行
+python3 scripts/build_quiz.py         # quiz-src/ -> code-quiz/data/*.js
+```
+
 ## 测试
 
 ```bash
-python3 -m unittest discover -s tests -v      # 解析器、答案匹配、答案文件校验
-node --test flashcards/tests/deck.test.js     # 筛选、排序、绝对化措辞高亮
+python3 -m unittest discover -s tests -v          # 解析器、答案匹配、答案文件、题目源文件校验
+node --test flashcards/tests/deck.test.js         # 闪卡：筛选、排序、绝对化措辞高亮
+node --test code-quiz/tests/judge.test.js         # 填空判分、模板切分、代码高亮
 ```
 
 ## 目录
 
 ```
 input/              原始资料（doc/docx/pdf）
+external/           下载的 GitHub 题库（不入库）
 scripts/            提取、解析、构建
-answers/            我写的答案
-flashcards/         网页闪卡（index.html + js/ + data/）
+answers/            我写的理论题答案
+quiz-src/           代码填空题的源文件和示例数据
+flashcards/         理论题闪卡（index.html + js/ + data/）
+code-quiz/          代码填空练习（index.html + js/ + data/）
 tests/              Python 测试
 ```

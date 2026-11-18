@@ -1,0 +1,42 @@
+@id L4-2.1.1
+@level L4
+@title 基于人类照片的性别的数据归类和定义（批量转 jpg 并重命名）
+@no 2.1.1
+@source 四级操作技能模拟卷 2.1.1 的 Python 部分。评分点取自四级模拟卷的评分表；参考代码由我按题干编写，未经官方核对；浏览器里没有图片文件，这题只能填空判分，不能运行。
+@total 30
+@time 30
+@runnable no
+@desc
+考试里先用 labelImg 给 2.1.1pic 文件夹中的 15 张图片做性别分类标注（Male / Female，保存为同名 xml，15 分，不在代码里）。再补全 2.1.1.py，对这 15 张图片做格式转换和重命名。
+@tasks
+（1）把 2.1.1pic 文件夹中图片样本的格式修改为 jpg。
+（2）把转换后的 jpg 以数字编号重命名，从 0000 开始计数、顺序累加：0000.jpg、0001.jpg、0002.jpg……直到结束。
+@rubric
+M1|15|用 labelImg 按指定格式做性别分类标注，每标注 1 张得 1 分（不在代码里）|official
+M2|6|正确补全代码，每空 2 分，共 6 分（第一段）|official
+M3|6|正确补全代码，每空 2 分，共 6 分（第二段）|official
+M4|3|下载处理好的数据集，结果正确得 3 分，不正确得 0 分|official
+@cell
+import os
+from PIL import Image
+
+folder = '2.1.1pic'
+count = 0
+
+# 依次处理文件夹中的每一张图片
+for filename in ⟦sorted(os.listdir(folder))⟧:
+    path = os.path.join(folder, filename)
+
+    # 打开图片并转成 RGB（保存 jpg 需要 RGB 模式）
+    img = ⟦Image.open(path).convert('RGB')⟧
+
+    # 用 4 位数字编号作为新文件名：0000.jpg、0001.jpg……
+    new_name = ⟦f'{count:04d}.jpg'||'{:04d}.jpg'.format(count)||str(count).zfill(4) + '.jpg'⟧
+
+    # 另存为 jpg 格式
+    ⟦img.save(os.path.join(folder, new_name), 'JPEG')||img.save(os.path.join(folder, new_name))⟧
+
+    # 原文件名与新文件名不同时，删除原文件
+    if new_name != filename:
+        ⟦os.remove(path)⟧
+    count += 1

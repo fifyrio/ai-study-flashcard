@@ -1,0 +1,58 @@
+@id L4-3.2.5
+@level L4
+@title 智能薪资预测系统优化（线性回归）
+@no 3.2.5
+@source 四级操作技能模拟卷 3.2.5。评分点取自四级模拟卷的评分表；参考代码由我按题干编写，未经官方核对；数据是我生成的示例数据（列名与题干一致）。
+@total 20
+@time 30
+@py pandas, matplotlib, scikit-learn
+@files
+Salary_Data.csv = src:l4-3.2.5/Salary_Data.csv
+@desc
+准确预测员工薪资对制定薪酬政策很重要。请读取数据集，用线性回归建模工作年限（YearsExperience）与薪资（Salary）的关系，并预测一名有 7 年工作经验的员工的预期薪资。
+@tasks
+（1）读取数据集文件，查看前 5 行（head）和基本统计摘要（describe）。
+（2）用散点图观察工作年限与薪资的关系，保存为 3.2.5-1.jpg。
+（3）用线性回归建模（用全部数据，不划分数据集），求出直线的系数和截距，结果截图保存为 3.2.5-2.jpg；在 3.2.5.doc 中写出优化模型的建议。
+（4）预测一个有 7 年工作经验的员工的预期薪资。
+@rubric
+M1|2|加载数据代码正确|official
+M2|2|输出数据前 5 行代码正确|official
+M3|2|描述性统计分析代码正确|official
+M4|2|绘制工作年限与薪资散点图代码正确（每空 1 分）|official
+M5|1|截图 3.2.5-1 中散点图正确|official
+M6|2|线性回归建模代码正确（每空 1 分）|official
+M7|2|输出模型系数和截距代码正确（每空 1 分）|official
+M8|2|截图 3.2.5-2 中系数和截距数据正确（每对 1 个数据得 1 分）|official
+M9|2|预测薪资代码正确（每空 1 分）|official
+M10|3|给出优化模型的建议（每条 1 分，最多 3 分）|official
+@cell
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+
+# 读取数据集
+data = ⟦pd.read_csv('Salary_Data.csv')⟧
+
+# 查看前 5 行和基本统计摘要
+print(⟦data.head()⟧)
+print(⟦data.describe()⟧)
+@cell
+# 散点图：工作年限与薪资
+plt.scatter(⟦data['YearsExperience'], data['Salary']⟧)
+plt.xlabel('YearsExperience')
+plt.ylabel('Salary')
+plt.show()
+@cell
+# 线性回归建模（使用全部数据，不划分数据集）
+X = ⟦data[['YearsExperience']]⟧
+y = ⟦data['Salary']⟧
+model = ⟦LinearRegression()⟧
+⟦model.fit(X, y)⟧
+
+print('系数:', ⟦model.coef_[0]||model.coef_⟧)
+print('截距:', ⟦model.intercept_⟧)
+@cell
+# 预测有 7 年工作经验的员工的预期薪资
+pred = ⟦model.predict([[7]])||model.predict(pd.DataFrame({'YearsExperience': [7]}))⟧
+print('7 年工作经验的预期薪资:', pred[0])

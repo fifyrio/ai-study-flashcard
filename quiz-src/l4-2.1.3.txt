@@ -1,0 +1,46 @@
+@id L4-2.1.3
+@level L4
+@title 运输工具图像的数据归类和定义（XML 标注提取成 CSV）
+@no 2.1.3
+@source 四级操作技能复习题 2.1.3 的 Python 部分。评分点取自四级题库的评分表；参考代码由我按题干编写，未经官方核对；XML 是我生成的 3 个示例文件。
+@total 30
+@time 30
+@py
+@files
+dataset/img_001.xml = src:l4-2.1.3/dataset/img_001.xml
+dataset/img_002.xml = src:l4-2.1.3/dataset/img_002.xml
+dataset/img_003.xml = src:l4-2.1.3/dataset/img_003.xml
+@desc
+考试里先用 labelImg 给 dataset 文件夹里的全部图片画框并标注运输工具类型，每张图生成一个同名 xml（这部分占 15 分，不在代码里）。再补全 2.1.3.py，把所有 xml 里的标注提取出来合并到 result.csv。
+@tasks
+（1）遍历 dataset 文件夹中所有的 xml 文件，提取标注内容。
+（2）参考 sample.csv 的格式，把最终的归档结果提取到 result.csv 中。
+@rubric
+M1|15|用 labelImg 标注：每张正确的图得 1 分，保存成 1 个 xml 文件得 0.5 分（不在代码里）|official
+M2|10|正确打开文件并补全代码，每空 1 分，共 10 分|official
+M3|5|每张图片的归档结果提取正确，得 0.5 分，共 5 分|official
+@cell
+import os
+import csv
+import xml.etree.ElementTree as ET
+
+folder = 'dataset'
+rows = []
+
+# 遍历 dataset 文件夹中所有的 xml 文件
+for filename in sorted(⟦os.listdir(folder)⟧):
+    if filename.⟦endswith('.xml')⟧:
+        tree = ⟦ET.parse(os.path.join(folder, filename))⟧
+        root = ⟦tree.getroot()⟧
+        image_name = ⟦root.find('filename').text⟧
+        # 一张图里可能有多个标注框
+        for obj in ⟦root.findall('object')⟧:
+            rows.append([image_name, ⟦obj.find('name').text⟧])
+
+# 写入 result.csv
+with open('result.csv', 'w', newline='', encoding='utf-8') as f:
+    writer = ⟦csv.writer(f)⟧
+    writer.writerow(['filename', 'class'])
+    ⟦writer.writerows(rows)⟧
+
+print(open('result.csv', encoding='utf-8').read())

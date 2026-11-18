@@ -1,0 +1,85 @@
+@id L3-1.1.1
+@level L3
+@no 1.1.1
+@title 智能医疗系统中的业务数据处理流程设计
+@source 三级模拟卷 1.1.1。代码取自仓库 practices/1.1.1 的参考解答，评分点取自参考代码里的分值注释。
+@total 25
+@time 30
+@py pandas, numpy
+@files
+patient_data.csv = ext:1.1.1_智能医疗系统中的业务数据处理流程设计/data/patient_data.csv
+@desc
+某医疗机构计划引入智能医疗系统，用患者历史数据预测健康风险，辅助医生诊断。请根据 patient_data.csv 补全 Python 代码（1.1.1.ipynb），完成数据统计。
+字段：PatientID 患者ID；Age 年龄；BMI 体重指数；BloodPressure 血压；Cholesterol 胆固醇水平；DaysInHospital 住院天数。
+@tasks
+（1）统计住院天数超过 7 天的患者数量及占比。这类患者定义为高风险患者，反之为低风险患者。
+（2）统计不同 BMI 区间中高风险患者的比例和患者数。区间：偏瘦（低于 18.5）、正常（18.5~23.9）、超重（24.0~27.9）、肥胖（28.0 及以上）。
+（3）统计不同年龄区间中高风险患者的比例和患者数。区间：≤25 岁、26-35 岁、36-45 岁、46-55 岁、56-65 岁、＞65 岁。
+@rubric
+R1|1|读取数据集|official
+R2|3|创建新列 RiskLevel，根据住院天数判断风险等级|official
+R3|2|统计不同风险等级的患者数量|official
+R4|1|计算高风险患者占比|official
+R5|1|计算低风险患者占比|official
+R6|4|根据 BMI 划分指定区间（左闭右开）|official
+R7|2|计算每个 BMI 区间中高风险患者的比例|official
+R8|1|统计每个 BMI 区间的患者数量|official
+R9|4|根据年龄划分指定区间（左闭右开）|official
+R10|2|计算每个年龄区间中高风险患者的比例|official
+R11|1|统计每个年龄区间的患者数量|official
+R12|3|三张结果截图 1.1.1-1 / -2 / -3.jpg（25 分减去以上代码分 22 分，推算）|derived
+@cell
+import pandas as pd
+import numpy as np
+
+# 读取数据集
+data = ⟦pd.read_csv('patient_data.csv')⟧
+
+# 1. 创建新列 RiskLevel：住院天数大于 7 为高风险患者，否则为低风险患者
+data['RiskLevel'] = ⟦np.where(data['DaysInHospital'] > 7, '高风险患者', '低风险患者')⟧
+
+# 统计不同风险等级的患者数量
+risk_counts = ⟦data['RiskLevel'].value_counts()⟧
+
+# 计算高、低风险患者占比
+high_risk_ratio = ⟦risk_counts['高风险患者'] / len(data)⟧
+low_risk_ratio = ⟦risk_counts['低风险患者'] / len(data)⟧
+
+print("高风险患者数量:", risk_counts['高风险患者'])
+print("低风险患者数量:", risk_counts['低风险患者'])
+print("高风险患者占比:", high_risk_ratio)
+print("低风险患者占比:", low_risk_ratio)
+@cell
+# 2. BMI 区间
+bmi_bins = [0, 18.5, 24, 28, np.inf]
+bmi_labels = ['偏瘦', '正常', '超重', '肥胖']
+
+# 根据 BMI 值划分区间（左闭右开）
+data['BMIRange'] = ⟦pd.cut(data['BMI'], bins=bmi_bins, labels=bmi_labels, right=False)⟧
+
+# 每个 BMI 区间中高风险患者的比例
+bmi_risk_rate = ⟦data.groupby('BMIRange')['RiskLevel'].apply(lambda x: (x == '高风险患者').mean())||data.groupby('BMIRange', observed=False)['RiskLevel'].apply(lambda x: (x == '高风险患者').mean())⟧
+
+# 每个 BMI 区间的患者数量
+bmi_patient_count = ⟦data['BMIRange'].value_counts()⟧
+
+print("BMI区间中高风险患者的比例和患者数:")
+print(bmi_risk_rate)
+print(bmi_patient_count)
+@cell
+# 3. 年龄区间
+age_bins = [0, 26, 36, 46, 56, 66, np.inf]
+age_labels = ['≤25岁', '26-35岁', '36-45岁', '46-55岁', '56-65岁', '＞65岁']
+
+# 根据年龄划分区间（左闭右开）
+data['AgeRange'] = ⟦pd.cut(data['Age'], bins=age_bins, labels=age_labels, right=False)⟧
+
+# 每个年龄区间中高风险患者的比例
+age_risk_rate = ⟦data.groupby('AgeRange')['RiskLevel'].apply(lambda x: (x == '高风险患者').mean())||data.groupby('AgeRange', observed=False)['RiskLevel'].apply(lambda x: (x == '高风险患者').mean())⟧
+
+# 每个年龄区间的患者数量
+age_patient_count = ⟦data['AgeRange'].value_counts()⟧
+
+print("年龄区间中高风险患者的比例和患者数:")
+print(age_risk_rate)
+print(age_patient_count)
