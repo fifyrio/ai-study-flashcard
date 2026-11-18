@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>考证闪卡 · 人工智能训练师 / 全媒体运营师</title>
+  <meta name="description" content="两门四级职业技能考试的理论题库闪卡：按分值排序、官方答案与推断答案分开标注、错题自动回炉。">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip" href="#card">跳到题目</a>
+
+  <header class="masthead">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">卡</span>
+      <div>
+        <h1>考证闪卡</h1>
+        <p>四级 · 理论题库即考题</p>
+      </div>
+    </div>
+    <div class="exam-switch" role="tablist" aria-label="选择考试">
+      <button role="tab" id="tab-ai" data-exam="ai" aria-selected="true">人工智能训练师</button>
+      <button role="tab" id="tab-media" data-exam="media" aria-selected="false">全媒体运营师</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar" aria-label="筛选">
+      <details class="filters" open>
+        <summary>筛选与范围</summary>
+
+        <section aria-labelledby="h-chapters">
+          <h2 id="h-chapters">章节 <small>括号内为理论卷分值</small></h2>
+          <ul id="chapters" class="chapter-list"></ul>
+        </section>
+
+        <section aria-labelledby="h-type">
+          <h2 id="h-type">题型</h2>
+          <div id="types" class="seg" role="group" aria-labelledby="h-type"></div>
+        </section>
+
+        <section aria-labelledby="h-source">
+          <h2 id="h-source">答案来源</h2>
+          <div id="sources" class="seg" role="group" aria-labelledby="h-source"></div>
+          <p class="hint">官方 = 模拟卷附的标准答案；推断 = 我根据题意判断的答案，未经官方核对，标「把握低」的尤其要自己再想一遍。</p>
+        </section>
+
+        <section aria-labelledby="h-scope">
+          <h2 id="h-scope">复习范围</h2>
+          <div id="scopes" class="seg" role="group" aria-labelledby="h-scope"></div>
+          <p class="hint">连续答对 2 次算「掌握」。</p>
+        </section>
+
+        <section class="toggles">
+          <label><input type="checkbox" id="opt-hl" checked> 判断题高亮绝对化措辞</label>
+          <label><input type="checkbox" id="opt-shuffle"> 章节内随机顺序</label>
+        </section>
+
+        <button type="button" id="reset" class="ghost">清除本机进度</button>
+      </details>
+    </aside>
+
+    <section class="stage" aria-label="刷题区">
+      <div class="status">
+        <p id="status" aria-live="polite"></p>
+        <div class="meter" role="progressbar" aria-label="当前范围掌握进度" id="meter"><span id="meter-fill"></span></div>
+      </div>
+      <article id="card" class="card" tabindex="-1"></article>
+      <nav class="actions" aria-label="题目操作">
+        <button type="button" id="prev" class="ghost">上一题</button>
+        <button type="button" id="reveal" class="ghost">不会，看答案</button>
+        <button type="button" id="next" class="primary">下一题</button>
+      </nav>
+      <p class="keys">键盘：<kbd>1</kbd>–<kbd>4</kbd> 或 <kbd>A</kbd>–<kbd>D</kbd> 选项 · <kbd>T</kbd> 正确 <kbd>F</kbd> 错误 · <kbd>空格</kbd> 下一题 · <kbd>←</kbd> 上一题</p>
+    </section>
+  </main>
+
+  <script src="data/ai.js"></script>
+  <script src="data/media.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/deck.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
