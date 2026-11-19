@@ -55,6 +55,11 @@ python3 scripts/make_sample_data.py   # 只在需要重新生成四级示例数�
 python3 scripts/build_quiz.py         # quiz-src/ -> code-quiz/data/*.js
 ```
 
+## 学习文档
+
+[docs/l4-operation-guide.md](docs/l4-operation-guide.md)：四级实操的循序渐进模板，从读懂代码里的符号，到 pandas、建模、
+文件处理，再到写作模板。整理自三级考前视频、一页纸速查表和四级题库。里面带 `run=` 的代码块都在干净环境里运行过。
+
 ## 测试
 
 ```bash
@@ -70,6 +75,7 @@ input/              原始资料（doc/docx/pdf）
 external/           下载的 GitHub 题库（不入库）
 scripts/            提取、解析、构建
 answers/            我写的理论题答案
+docs/               学习文档（循序渐进模板）
 quiz-src/           代码填空题的源文件和示例数据
 flashcards/         理论题闪卡（index.html + js/ + data/）
 code-quiz/          代码填空练习（index.html + js/ + data/）
