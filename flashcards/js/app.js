@@ -35,11 +35,12 @@
   }
 
   const saved = loadUi();
+  const initialExam = EXAMS[saved.exam] && window.DECKS[saved.exam] ? saved.exam : "ai";
   const state = {
-    exam: EXAMS[saved.exam] && window.DECKS[saved.exam] ? saved.exam : "ai",
+    exam: initialExam,
     hl: saved.hl !== false,
     shuffle: !!saved.shuffle,
-    filters: { chapter: "all", type: "all", source: "all", scope: "todo" },
+    filters: deck.defaultFilters(initialExam),
     queue: [],
     idx: 0,
     answered: null, // 选择的答案；"skip" 表示直接看答案
@@ -224,7 +225,8 @@
     tab.addEventListener("click", () => {
       if (!window.DECKS[tab.dataset.exam]) return;
       state.exam = tab.dataset.exam;
-      state.filters = { ...state.filters, chapter: "all" };
+      // 章节回到「全部」；答案来源回到这场考试的默认值（人工智能训练师只出官方答案的题）
+      state.filters = { ...state.filters, chapter: "all", source: deck.defaultFilters(state.exam).source };
       saveUi(); rebuildQueue(); renderAll();
     });
   }

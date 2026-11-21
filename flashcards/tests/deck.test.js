@@ -69,3 +69,24 @@ test("countMastered counts cards at or above the streak threshold", () => {
   const get = (id) => ({ streak: id === "a1" ? 2 : 1 });
   assert.equal(deck.countMastered(cards, get, 2), 1);
 });
+
+test("defaultFilters: the AI exam opens on official-answer questions only, other exams on everything", () => {
+  assert.deepEqual(deck.defaultFilters("ai"), { chapter: "all", type: "all", source: "official", scope: "todo" });
+  assert.equal(deck.defaultFilters("media").source, "all");
+  assert.equal(deck.defaultFilters("unknown-exam").source, "all");
+});
+
+test("defaultFilters hands out a fresh object, so changing one result never leaks into the next", () => {
+  const first = deck.defaultFilters("ai");
+  first.source = "all";
+  assert.equal(deck.defaultFilters("ai").source, "official");
+});
+
+test("the AI default filter keeps only official cards, and scope still hides mastered ones", () => {
+  const mixed = [card("o1", "a", 1), card("o2", "a", 2), card("i1", "a", 3, { src: "ai" })];
+  const get = (id) => (id === "o2" ? { wrong: 0, streak: 2 } : { wrong: 0, streak: 0 });
+  const todo = deck.filterCards(mixed, deck.defaultFilters("ai"), get, 2).map((c) => c.id);
+  assert.deepEqual(todo, ["o1"]);
+  const all = deck.filterCards(mixed, { ...deck.defaultFilters("ai"), scope: "all" }, get, 2).map((c) => c.id);
+  assert.deepEqual(all, ["o1", "o2"]);
+});

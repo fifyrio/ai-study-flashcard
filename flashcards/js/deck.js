@@ -28,6 +28,14 @@
     return parts;
   }
 
+  // 打开页面（或切换考试）时的默认答案来源：人工智能训练师只出有官方答案的题，其余考试不限
+  const DEFAULT_SOURCE = Object.freeze({ ai: "official" });
+
+  /** 某场考试的默认筛选。每次返回新对象，调用方改动它不会影响下一次。 */
+  function defaultFilters(exam) {
+    return { chapter: "all", type: "all", source: DEFAULT_SOURCE[exam] || "all", scope: "todo" };
+  }
+
   const isLowConfidence = (c) => c.src === "ai" && typeof c.note === "string" && c.note.startsWith("?");
   const cleanNote = (c) => (c.note ? c.note.replace(/^\?\s*/, "") : "");
 
@@ -74,5 +82,5 @@
     return cards.reduce((n, c) => n + (progress(c.id).streak >= masteredStreak ? 1 : 0), 0);
   }
 
-  return { splitAbsolute, isLowConfidence, cleanNote, filterCards, orderCards, countMastered, ABSOLUTE_WORDS };
+  return { splitAbsolute, isLowConfidence, cleanNote, filterCards, orderCards, countMastered, defaultFilters, ABSOLUTE_WORDS };
 });
